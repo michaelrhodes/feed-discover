@@ -1,5 +1,5 @@
 # feed-discover
-feed-discover is a module for the automatically discovery of RSS/Atom feeds.
+feed-discover is a module for the automatic discovery of RSS/Atom feeds.
 
 [![Build status](https://travis-ci.org/michaelrhodes/feed-discover.png?branch=master)](https://travis-ci.org/michaelrhodes/feed-discover)
 
