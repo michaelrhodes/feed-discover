@@ -1,10 +1,10 @@
 {
   "name": "feed-discover",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A module for the automatic discovery of RSS/Atom feeds.",
   "main": "index.js",
   "bin": {
-    "feed-discover": "feed-discover.js"
+    "feed-discover": "bin/feed-discover.js"
   },
   "dependencies": {
     "hyperquest": "~0.1.8",
