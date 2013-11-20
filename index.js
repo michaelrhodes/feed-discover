@@ -2,6 +2,7 @@ var url = require('url')
 var util = require('util')
 var stream = require('stream')
 var cheerio = require('cheerio')
+var relay = require('event-relay')
 var request = require('hyperquest')
 
 var protocolify = function(partial) {
@@ -69,7 +70,9 @@ Discover.prototype._transform = function(html, encoding, next) {
 
 module.exports = function(path) {
   path = protocolify(path)
-  return request(path).pipe(
-    new Discover(path)
-  )
+  var discover = new Discover(path)
+  var error = relay('error', discover)
+  return request(path)
+    .on('error', error)
+    .pipe(discover)
 }
