@@ -12,8 +12,12 @@ var protocolify = function(partial) {
   )
 }
 
-var Discover = function() {
+var Discover = function(path) {
   stream.Transform.call(this)
+  var the = url.parse(path)
+  this.origin = (the.protocol + '//' +
+    the.hostname
+  )
   this.unique = []
   this.dregs = ''
 }
@@ -35,7 +39,7 @@ Discover.prototype.feeds = function(buffer) {
   // Don't lose tags that were split apart
   // in the process of being streamed.
   var lines = html.split(/\n|\r/) 
-  this.dregs = lines.slice(lines.length - 4).join('')
+  this.dregs = lines.slice(lines.length - 2).join('')
 
   var $ = cheerio.load(html)
   
@@ -52,6 +56,9 @@ Discover.prototype.feeds = function(buffer) {
 
 Discover.prototype._transform = function(html, encoding, next) {
   this.feeds(html).forEach(function(feed) {
+    if (/^\//.test(feed)) {
+      feed = this.origin + feed
+    }
     if (this.unique.indexOf(feed) < 0) {
       this.unique.push(feed)
       this.push(feed + '\n')
@@ -61,10 +68,8 @@ Discover.prototype._transform = function(html, encoding, next) {
 }
 
 module.exports = function(path) {
-  var discover = new Discover
-
-  request(protocolify(path))
-    .pipe(discover)
-
-  return discover
+  path = protocolify(path)
+  return request(path).pipe(
+    new Discover(path)
+  )
 }
