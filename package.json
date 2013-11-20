@@ -1,0 +1,35 @@
+{
+  "name": "feed-discover",
+  "version": "0.0.0",
+  "description": "A module for the automatically discovery of RSS/Atom feeds.",
+  "main": "index.js",
+  "bin": {
+    "feed-discover": "feed-discover.js"
+  },
+  "dependencies": {
+    "hyperquest": "~0.1.8",
+    "cheerio": "~0.12.4"
+  },
+  "devDependencies": {
+    "tape": "~2.1.0",
+    "concat-stream": "~1.2.0"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:michaelrhodes/feed-discover.git"
+  },
+  "keywords": [
+    "rss",
+    "atom",
+    "feed",
+    "auto-discover"
+  ],
+  "author": "Michael Rhodes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/michaelrhodes/feed-discover/issues"
+  }
+}
