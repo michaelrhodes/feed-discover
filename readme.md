@@ -1,5 +1,5 @@
 # feed-discover
-feed-discover is a module for the automatic discovery of RSS/Atom feeds.
+feed-discover is a module for automatic RSS/Atom feed discovery. It exposes a transform stream that reads in HTML and writes out feed URLs.
 
 [![Build status](https://travis-ci.org/michaelrhodes/feed-discover.png?branch=master)](https://travis-ci.org/michaelrhodes/feed-discover)
 
@@ -16,16 +16,27 @@ $ feed-discover http://some-site.com
 
 #### module
 ``` js
-var split = require('split')
+var request = require('hyperquest')
 var discover = require('feed-discover')
 
 var url = 'http://some-site.com'
 
-discover(url)
-  .pipe(split())
+request(url)
+  .pipe(discover(url))
   .on('data', function(feed) {
     // http://some-site.com/rss.xml
   })
+```
+
+API
+``` 
+feed-discover(
+  
+  url (string):
+    the address used to resolve absolute paths.
+    eg. /path/to/feed -> http://url/path/to/feed
+
+)
 ```
 
 ### License

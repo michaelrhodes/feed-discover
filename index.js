@@ -2,19 +2,14 @@ var url = require('url')
 var util = require('util')
 var stream = require('stream')
 var cheerio = require('cheerio')
-var relay = require('event-relay')
-var request = require('hyperquest')
-
-var protocolify = function(partial) {
-  var has = url.parse(partial)
-  return (!has.protocol ? 
-    'http://' + partial :
-    partial
-  )
-}
 
 var Discover = function(path) {
+  if (!(this instanceof Discover)) {
+    return new Discover(path)
+  }
+
   stream.Transform.call(this)
+
   var the = url.parse(path)
   this.origin = (the.protocol + '//' +
     the.hostname
@@ -62,17 +57,10 @@ Discover.prototype._transform = function(html, encoding, next) {
     }
     if (this.unique.indexOf(feed) < 0) {
       this.unique.push(feed)
-      this.push(feed + '\n')
+      this.push(feed)
     }
   }.bind(this))
   next()
 }
 
-module.exports = function(path) {
-  path = protocolify(path)
-  var discover = new Discover(path)
-  var error = relay('error', discover)
-  return request(path)
-    .on('error', error)
-    .pipe(discover)
-}
+module.exports = Discover
