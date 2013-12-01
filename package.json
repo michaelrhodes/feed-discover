@@ -1,6 +1,6 @@
 {
   "name": "feed-discover",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A module for automatic RSS/Atom feed discovery.",
   "main": "index.js",
   "bin": {
