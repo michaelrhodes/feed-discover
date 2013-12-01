@@ -11,9 +11,11 @@ var Discover = function(path) {
   stream.Transform.call(this)
 
   var the = url.parse(path)
-  this.origin = (the.protocol + '//' +
+  this.origin = (
+    the.protocol + '//' +
     the.hostname
   )
+  this.protocol = the.protocol
   this.unique = []
   this.dregs = ''
 }
@@ -52,7 +54,10 @@ Discover.prototype.feeds = function(buffer) {
 
 Discover.prototype._transform = function(html, encoding, next) {
   this.feeds(html).forEach(function(feed) {
-    if (/^\//.test(feed)) {
+    if (/^\/\//.test(feed)) {
+      feed = this.protocol + feed
+    }
+    else if (/^\//.test(feed)) {
       feed = this.origin + feed
     }
     if (this.unique.indexOf(feed) < 0) {

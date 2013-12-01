@@ -7,8 +7,7 @@ var request = require('request')
 var protocolify = function(partial) {
   var has = parse(partial)
   return (!has.protocol ? 
-    'http://' + partial :
-    partial
+    'http://' + partial : partial
   )
 }
 
