@@ -2,7 +2,7 @@
 
 var discover = require('../')
 var parse = require('url').parse
-var request = require('hyperquest')
+var request = require('request')
 
 var protocolify = function(partial) {
   var has = parse(partial)

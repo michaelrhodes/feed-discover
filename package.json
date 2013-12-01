@@ -1,6 +1,6 @@
 {
   "name": "feed-discover",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A module for automatic RSS/Atom feed discovery.",
   "main": "index.js",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "cheerio": "~0.12.4",
-    "hyperquest": "~0.1.8"
+    "request": "~2.27.0"
   },
   "devDependencies": {
     "tape": "~2.1.0",

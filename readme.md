@@ -34,7 +34,7 @@ feed-discover(
   
   url (string):
     the address used to resolve absolute paths.
-    eg. /path/to/feed -> http://url/path/to/feed
+    eg. /path/to/feed -> http://some-site.com/path/to/feed
 
 )
 ```
