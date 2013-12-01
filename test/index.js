@@ -1,5 +1,5 @@
 var run = require('tape').test
-var request = require('hyperquest')
+var request = require('request')
 var concat = require('concat-stream')
 var discover = require('../')
 
@@ -10,7 +10,7 @@ run('it works', function(test) {
     'http://michaelrhod.es',
     'http://substack.net', 
     'http://javascriptjabber.com',
-    'https://tent.io/blog'
+    'https://tent.io'
   ]
 
   var expected = [
