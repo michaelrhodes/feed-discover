@@ -3,6 +3,7 @@
 var discover = require('../')
 var parse = require('url').parse
 var request = require('request')
+var stream = require('as-stream')
 
 var protocolify = function(partial) {
   var has = parse(partial)
@@ -12,7 +13,7 @@ var protocolify = function(partial) {
 }
 
 var url = protocolify(process.argv[2])
-var error = function(error) {
+var fail = function(error) {
   var https = /^https/.test(url)
   var message = (
     error.code === 'ENOTFOUND' ?
@@ -34,7 +35,17 @@ var write = function(feed) {
   )
 }
 
-return request(url)
-  .on('error', error)
-  .pipe(discover(url))
-  .on('data', write) 
+return request(url, function(error, response, body) {
+  var shouldFail = response.statusCode >= 400
+  if (!error && shouldFail) {
+    error = new Error
+    error.code = 'ENOTFOUND'
+  }
+  if (error) {
+    fail(error)
+    return
+  }
+  stream(body)
+    .pipe(discover(url))
+    .on('data', write) 
+})
