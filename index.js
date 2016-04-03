@@ -54,11 +54,10 @@ Discover.prototype.feeds = function(buffer) {
 
 Discover.prototype._transform = function(html, encoding, next) {
   this.feeds(html).forEach(function(feed) {
+    feed = url.resolve(this.origin, feed)
+
     if (/^\/\//.test(feed)) {
       feed = this.protocol + feed
-    }
-    else if (/^\//.test(feed)) {
-      feed = this.origin + feed
     }
     if (this.unique.indexOf(feed) < 0) {
       this.unique.push(feed)
