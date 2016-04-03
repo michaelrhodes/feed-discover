@@ -4,23 +4,19 @@ var concat = require('concat-stream')
 var discover = require('../')
 
 run('it works', function(test) {
-  test.plan(4)
-
   var sites = [
-    'http://michaelrhod.es',
     'http://substack.net', 
-    'http://javascriptjabber.com',
-    'https://tent.io'
+    'https://tent.io',
+    'http://0x8890.com',
   ]
 
   var expected = [
-    'http://michaelrhod.es/rss',
     'http://substack.net/blog.xml',
-    'http://feeds.feedburner.com/JavascriptJabber' +
-    'http://javascriptjabber.com/feed/' +
-    'http://javascriptjabber.com/comments/feed/',
-    'https://tent.io/blog.xml'
+    'https://tent.io/blog.xml',
+    'http://0x8890.com/feed.xml'
   ]
+
+  test.plan(sites.length)
 
   sites.forEach(function(site, i) { 
     request(site)
