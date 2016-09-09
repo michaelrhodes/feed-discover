@@ -1,55 +1,58 @@
-'use strict'
+var url = require('url')
+var util = require('util')
+var Parser = require('htmlparser2').Parser
+var Transform = require('stream').Transform
 
-const url = require('url')
-const Parser = require('htmlparser2').Parser
-const Transform = require('stream').Transform
-
-class Discover extends Transform {
-  constructor(path) {
-    super()
-
-    this.baseUrl = path
-    this.urlList = []
-
-    this._initParser()
+function Discover(path) {
+  if (!(this instanceof Discover)) {
+    return new Discover(path);
   }
 
-  _initParser() {
-    this.parser = new Parser({
-      'onopentag': (name, attrs) => {
-        if (name == 'link' &&
-            attrs &&
-            attrs.type &&
-            attrs.type.match(/(rss|atom)/) &&
-            attrs.href) {
-          this._emitFeed(attrs.href)
-        }
+  Transform.call(this);
 
-        if (name == 'a' &&
-            attrs &&
-            attrs.href &&
-            attrs.href.match(/feedburner/)) {
-          this._emitFeed(attrs.href)
-        }
+  this.baseUrl = path
+  this.urlList = []
+
+  this._initParser()
+}
+
+util.inherits(Discover, Transform);
+
+Discover.prototype._initParser = function() {
+  var self = this;
+
+  this.parser = new Parser({
+    'onopentag': function(name, attrs) {
+      if (name == 'link' &&
+          attrs &&
+          attrs.type &&
+          attrs.type.match(/(rss|atom)/) &&
+          attrs.href) {
+        self._emitFeed(attrs.href)
       }
-    })
-  }
 
-  _emitFeed(href) {
-    let feedUrl = url.resolve(this.baseUrl, href)
-
-    if (this.urlList.indexOf(feedUrl) < 0) {
-      this.urlList.push(feedUrl)
-      this.push(feedUrl)
+      if (name == 'a' &&
+          attrs &&
+          attrs.href &&
+          attrs.href.match(/feedburner/)) {
+        self._emitFeed(attrs.href)
+      }
     }
-  }
+  })
+}
 
-  _transform(chunk, encoding, next) {
-    this.parser.write(chunk)
-    next()
+Discover.prototype._emitFeed = function(href) {
+  var feedUrl = url.resolve(this.baseUrl, href)
+
+  if (this.urlList.indexOf(feedUrl) < 0) {
+    this.urlList.push(feedUrl)
+    this.push(feedUrl)
   }
 }
 
-module.exports = function(path) {
-  return new Discover(path)
+Discover.prototype._transform = function(chunk, encoding, next) {
+  this.parser.write(chunk)
+  next()
 }
+
+module.exports = Discover
