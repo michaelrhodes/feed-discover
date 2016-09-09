@@ -8,7 +8,7 @@ var valid = require('is-url')
 
 var sanitise = function(url) {
   if (!url) {
-    return null 
+    return null
   }
 
   var has = parse(url)
@@ -35,9 +35,9 @@ var fail = function(error) {
       url + ' doesn’t seem to exist.' :
 
     error.code === 'ECONNREFUSED' ?
-    'The connection was refused.' + 
+    'The connection was refused.' +
     (https ? ' Maybe try regular old http.' : '') :
-  
+
     'S̵om̴e̷͢t͏̧h̨i͟n͢͢ģ͜ ̢͟w̴̴e̵͟͝nt̛͡͝ ̧͠h̕͏o̷rríbĺ͘y̶̨ w̵̴̨ŗo̢͏n̴̸͠g̷…͠'
   )
 

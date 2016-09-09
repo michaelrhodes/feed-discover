@@ -8,9 +8,9 @@
   },
   "dependencies": {
     "as-stream": "~0.1.1",
-    "cheerio": "~0.12.4",
-    "is-url": "~1.0.0",
-    "request": "~2.27.0"
+    "htmlparser2": "^3.9.1",
+    "is-url": "^1.2.2",
+    "request": "^2.74.0"
   },
   "devDependencies": {
     "tape": "~2.1.0",
