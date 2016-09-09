@@ -29,18 +29,18 @@ Discover.prototype.feeds = function(buffer) {
     var feed = $(this).attr('href')
     feeds.push(feed)
   }
-  
+
   if (this.dregs) {
     html = this.dregs + html
   }
-  
+
   // Don't lose tags that were split apart
   // in the process of being streamed.
-  var lines = html.split(/\n|\r/) 
+  var lines = html.split(/\n|\r/)
   this.dregs = lines.slice(lines.length - 2).join('')
 
   var $ = cheerio.load(html)
-  
+
   // Legit
   $('link[type*=rss]').each(extract)
   $('link[type*=atom]').each(extract)
@@ -48,7 +48,7 @@ Discover.prototype.feeds = function(buffer) {
   // Questionable
   $('a:contains(RSS)').each(extract)
   $('a[href*=feedburner]').each(extract)
-  
+
   return feeds
 }
 
