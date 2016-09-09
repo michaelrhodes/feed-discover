@@ -1,70 +1,55 @@
-var url = require('url')
-var util = require('util')
-var stream = require('stream')
-var cheerio = require('cheerio')
+'use strict'
 
-var Discover = function(path) {
-  if (!(this instanceof Discover)) {
-    return new Discover(path)
+const url = require('url')
+const Parser = require('htmlparser2').Parser
+const Transform = require('stream').Transform
+
+class Discover extends Transform {
+  constructor(path) {
+    super()
+
+    this.baseUrl = path
+    this.urlList = []
+
+    this._initParser()
   }
 
-  stream.Transform.call(this)
+  _initParser() {
+    this.parser = new Parser({
+      'onopentag': (name, attrs) => {
+        if (name == 'link' &&
+            attrs &&
+            attrs.type &&
+            attrs.type.match(/(rss|atom)/) &&
+            attrs.href) {
+          this._emitFeed(attrs.href)
+        }
 
-  var the = url.parse(path)
-  this.origin = (
-    the.protocol + '//' +
-    the.hostname
-  )
-  this.protocol = the.protocol
-  this.unique = []
-  this.dregs = ''
-}
-
-util.inherits(Discover, stream.Transform)
-
-Discover.prototype.feeds = function(buffer) {
-  var html = buffer.toString()
-  var feeds = []
-  var extract = function() {
-    var feed = $(this).attr('href')
-    feeds.push(feed)
+        if (name == 'a' &&
+            attrs &&
+            attrs.href &&
+            attrs.href.match(/feedburner/)) {
+          this._emitFeed(attrs.href)
+        }
+      }
+    })
   }
 
-  if (this.dregs) {
-    html = this.dregs + html
-  }
+  _emitFeed(href) {
+    let feedUrl = url.resolve(this.baseUrl, href)
 
-  // Don't lose tags that were split apart
-  // in the process of being streamed.
-  var lines = html.split(/\n|\r/)
-  this.dregs = lines.slice(lines.length - 2).join('')
-
-  var $ = cheerio.load(html)
-
-  // Legit
-  $('link[type*=rss]').each(extract)
-  $('link[type*=atom]').each(extract)
-
-  // Questionable
-  $('a:contains(RSS)').each(extract)
-  $('a[href*=feedburner]').each(extract)
-
-  return feeds
-}
-
-Discover.prototype._transform = function(html, encoding, next) {
-  this.feeds(html).forEach(function(feed) {
-    feed = url.resolve(this.origin, feed)
-
-    if (/^\/\//.test(feed)) {
-      feed = this.protocol + feed
+    if (this.urlList.indexOf(feedUrl) < 0) {
+      this.urlList.push(feedUrl)
+      this.push(feedUrl)
     }
-    if (this.unique.indexOf(feed) < 0) {
-      this.unique.push(feed)
-      this.push(feed)
-    }
-  }.bind(this))
-  next()
+  }
+
+  _transform(chunk, encoding, next) {
+    this.parser.write(chunk)
+    next()
+  }
 }
 
-module.exports = Discover
+module.exports = function(path) {
+  return new Discover(path)
+}
