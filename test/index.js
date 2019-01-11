@@ -5,15 +5,13 @@ var discover = require('../')
 
 run('it works', function(test) {
   var sites = [
-    'http://substack.net', 
-    'https://tent.io',
-    'http://0x8890.com',
+    'https://www.abc.net.au',
+    'https://daily.bandcamp.com',
   ]
 
   var expected = [
-    'http://substack.net/blog.xml',
-    'https://tent.io/blog.xml',
-    'http://0x8890.com/feed.xml'
+    'https://www.abc.net.au/homepage/rss.xml',
+    'https://daily.bandcamp.com/feed/https://daily.bandcamp.com/comments/feed/'
   ]
 
   test.plan(sites.length)
