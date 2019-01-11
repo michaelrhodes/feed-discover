@@ -3,6 +3,9 @@ var util = require('util')
 var Parser = require('htmlparser2').Parser
 var Transform = require('stream').Transform
 
+var type = /(rss|atom)/
+var feedburner = /feedburner/
+
 function Discover(path) {
   if (!(this instanceof Discover)) {
     return new Discover(path);
@@ -26,7 +29,7 @@ Discover.prototype._initParser = function() {
       if (name == 'link' &&
           attrs &&
           attrs.type &&
-          attrs.type.match(/(rss|atom)/) &&
+          type.test(attrs.type) &&
           attrs.href) {
         self._emitFeed(attrs.href)
       }
@@ -34,7 +37,7 @@ Discover.prototype._initParser = function() {
       if (name == 'a' &&
           attrs &&
           attrs.href &&
-          attrs.href.match(/feedburner/)) {
+          feedburner.test(attrs.href)) {
         self._emitFeed(attrs.href)
       }
     }
