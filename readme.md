@@ -1,7 +1,7 @@
 # feed-discover
 feed-discover is a module for automatic RSS/Atom feed discovery. It exposes a transform stream that reads in HTML and writes out feed URLs.
 
-[![Build status](https://travis-ci.org/michaelrhodes/feed-discover.png?branch=master)](https://travis-ci.org/michaelrhodes/feed-discover)
+[![Build status](https://travis-ci.org/michaelrhodes/feed-discover.svg?branch=master)](https://travis-ci.org/michaelrhodes/feed-discover)
 
 ## Install
 ``` sh
